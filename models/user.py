@@ -1,0 +1,85 @@
+from models import Model
+from models.user_role import UserRole
+
+import hashlib
+
+
+class User(Model):
+    """
+    User 是一个保存用户数据的 model
+    现在只有两个属性 username 和 password
+    """
+
+    def __init__(self, form):
+        super().__init__(form)
+        self.username = form.get('username', '')
+        self.password = form.get('password', '')
+        self.role = form.get('role', UserRole.normal)
+
+    @staticmethod
+    def guest():
+
+        form = dict(
+            role=UserRole.guest,
+            username='【游客】',
+        )
+        u = User(form)
+        return u
+
+    def is_guest(self):
+        return self.role == UserRole.guest
+
+    # 增加管理员的静态方法
+    @staticmethod
+    def admin():
+        form = dict(
+            role=UserRole.admin,
+            # role='admin',
+            username='【管理员】',
+            id=-1,
+        )
+        u = User(form)
+        return u
+
+    # 管理员的实例
+    def is_admin(self):
+        return self.role == UserRole.admin
+
+    @staticmethod
+    def salted_password(password, salt='$!@><?>HUI&DWQa`'):
+        """$!@><?>HUI&DWQa`"""
+        salted = password + salt
+        hash = hashlib.sha256(salted.encode()).hexdigest()
+        return hash
+
+    @classmethod
+    def login(cls, form):
+        salted = cls.salted_password(form['password'])
+        u = User.find_by(username=form['username'], password=salted)
+        if u is not None:
+            result = '登录成功'
+            return u, result
+        else:
+            result = '用户名或者密码错误'
+            return User.guest(), result
+
+    @classmethod
+    def register(cls, form):
+        valid = len(form['username']) > 2 and len(form['password']) > 2
+        if valid:
+            form['password'] = cls.salted_password(form['password'])
+            u = User.new(form)
+            result = '注册成功<br> <pre>{}</pre>'.format(User.all())
+            return u, result
+        else:
+            result = '用户名或者密码长度必须大于2'
+            return User.guest(), result
+
+    @classmethod
+    def update(cls, form):
+        user_id = int(form['id'])
+        t = User.find_by(id=user_id)
+        # 其中 调用 user.salted_password() 更新取得加盐密码
+        form['password'] = cls.salted_password(form['password'])
+        t.password = form['password']
+        t.save()
