@@ -19,7 +19,7 @@ def save(data, path):
     # ensure_ascii=False 用于保存中文
     s = json.dumps(data, indent=2, ensure_ascii=False, cls=GilEncoder)
     with open(path, 'w+', encoding='utf-8') as f:
-        log('save', path, s, data)
+        # log('save', path, s, data)
         f.write(s)
 
 
@@ -90,14 +90,12 @@ class Model(object):
         # log('models in all', models)
         # 这里用了列表推导生成一个包含所有 实例 的 list
         # m 是 dict, 用 cls.new(m) 可以初始化一个 cls 的实例
-        # 不明白就 log 大法看看这些都是啥
         ms = [cls(m) for m in models]
         return ms
 
     @classmethod
     def find_by(cls, **kwargs):
         # log('find_by kwargs', kwargs)
-
         for m in cls.all():
             exist = True
             for k, v in kwargs.items():
@@ -110,11 +108,10 @@ class Model(object):
     def find_all(cls, **kwargs):
         # log('find_all kwargs', kwargs)
         models = []
-
         for m in cls.all():
             exist = True
             for k, v in kwargs.items():
-                log('for loop in find all', m, k, v, hasattr(m, k), getattr(m, k), getattr(m, k) == v)
+                # log('for loop in find all', m, k, v, hasattr(m, k), getattr(m, k), getattr(m, k) == v)
                 if not hasattr(m, k) or not getattr(m, k) == v:
                     exist = False
             if exist:
@@ -129,15 +126,15 @@ class Model(object):
         """
 
         models = self.all()
-        log('models', models)
+        # log('before saved all models', models)
 
         if self.id is None:
             # 加上 id
             if len(models) > 0:
-                log('不是第一个元素', models[-1].id)
+                # log('不是第一个元素', models[-1].id)
                 self.id = models[-1].id + 1
             else:
-                log('第一个元素')
+                # log('第一个元素')
                 self.id = 0
             models.append(self)
         else:
@@ -158,7 +155,6 @@ class Model(object):
         __repr__ 是一个魔法方法
         简单来说, 它的作用是得到类的 字符串表达 形式
         比如 print(u) 实际上是 print(u.__repr__())
-        不明白就看书或者 搜
         """
         classname = self.__class__.__name__
         properties = ['{}: ({})'.format(k, v) for k, v in self.__dict__.items()]

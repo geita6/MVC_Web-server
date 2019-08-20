@@ -18,7 +18,7 @@ class Session(Model):
     def expired(self):
         now = time.time()
         result = self.expired_time < now
-        log('expired', result, self.expired_time, now)
+        # log('session 过期 ', result, self.expired_time, now)
         return result
 
     @classmethod

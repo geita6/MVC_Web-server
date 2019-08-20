@@ -24,9 +24,7 @@ class Weibo(Model):
     def update(cls, form):
         weibo_id = int(form['id'])
         w = Weibo.find_by(id=weibo_id)
-        # 将板书中的w.title 修改为w.content
         w.content = form['content']
-        log('update w3', w)
 
     def comments(self):
         cs = Comment.find_all(weibo_id=self.id)

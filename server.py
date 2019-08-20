@@ -28,7 +28,7 @@ def response_for_path(request):
     r.update(public_routes())
     r.update(routes_admin())
     response = r.get(request.path, error)
-    log('request', request, response)
+    log('路由分发', request.path, response)
     return response(request)
 
 
@@ -41,19 +41,19 @@ def request_from_connection(connection):
         # 取到的数据长度不够 buffer_size 的时候，说明数据已经取完了。
         if len(r) < buffer_size:
             request = request.decode()
-            log('request\n {}'.format(request))
+            # log('request\n {}'.format(request))
             return request
 
 
 def process_request(connection):
     with connection:
         r = request_from_connection(connection)
-        log('request log:\n <{}>'.format(r))
+        log('http请求:<{}>\n '.format(r))
         # 把原始请求数据传给 Request 对象
         request = Request(r)
         # 用 response_for_path 函数来得到 path 对应的响应内容
         response = response_for_path(request)
-        log("response log:\n <{}>".format(response))
+        log("http响应:\n <{}>".format(response))
         # 把响应发送给客户端
         connection.sendall(response)
 
@@ -73,7 +73,7 @@ def run(host, port):
         while True:
             connection, address = s.accept()
             # 第二个参数类型必须是 tuple
-            log('ip {}'.format(address))
+            log('请求地址 {}'.format(address))
             _thread.start_new_thread(process_request, (connection,))
 
 

@@ -38,10 +38,10 @@ def message_add_get(request):
     GET /messages?message=123&author=admin HTTP/1.1
     Host: localhost:3000
     """
-    log('本次请求的 method', request.method)
+    # log('本次请求的 method', request.method)
     data = request.query
     Message.new(data)
-    log('get', data)
+    # log('get', data)
     # 应该在这里保存 message_list
     return redirect('/messages/index')
 
@@ -50,7 +50,7 @@ def message_add_post(request):
     log('本次请求的 method', request.method)
     data = request.form()
     Message.new(data)
-    log('post', data)
+    # log('post', data)
     # 应该在这里保存 message_list
     return redirect('/messages/index')
 

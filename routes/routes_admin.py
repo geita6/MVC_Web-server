@@ -8,13 +8,13 @@ from utils import log
 
 def route_admin(request):
     users = User.all()
-    log('in admin')
+    # log('in admin')
     return html_response('admin_index.html', users=users)
 
 
 def edit_password(request):
     u = current_user(request)
-    log("in admin edit", u.id, u.password, u)
+    # log("in admin edit", u.id, u.password, u)
     return html_response('admin_password_edit.html', user=u)
 
 
@@ -29,7 +29,7 @@ def is_admin_required(route_function):
     def f(request):
         u = current_user(request)
         if u.is_admin():
-            log('管理员')
+            # log('管理员')
             return route_function(request)
         else:
             return redirect('/user/login/view')

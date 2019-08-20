@@ -19,8 +19,8 @@ def login(request):
     """
     登录页面的路由函数
     """
-    log('login, headers', request.headers)
-    log('login, cookies', request.cookies)
+    # log('login, headers', request.headers)
+    # log('login, cookies', request.cookies)
     user_current = current_user(request)
     log('current user', user_current)
     form = request.form()
@@ -51,7 +51,7 @@ def register(request):
     form = request.form()
 
     u, result = User.register(form)
-    log('register post', result)
+    # log('register post', result)
 
     return redirect('/user/register/view?result={}'.format(quote(result)))
 
@@ -62,26 +62,6 @@ def register_view(request):
     result = unquote_plus(result)
 
     return html_response('register.html', result=result)
-
-
-# RESTFul
-# GET /login login_get
-# POST /login login_post
-# UPDATE /user login_update
-# DELETE /user login_delete
-#
-# GET /login
-# POST /login/view
-# POST /user/update
-# GET /user/delete
-
-# user_get()
-# user_post()
-# def user:
-#     if method == 'GET':
-#         return user_get()
-#     else:
-#         return user_post()
 
 
 def route_dict():

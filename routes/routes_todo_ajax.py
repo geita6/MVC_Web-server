@@ -31,10 +31,10 @@ def add(request):
     """
     用于增加新 todo 的路由函数
     """
-    log('ajax add  in')
+    # log('ajax add  in')
     u = current_user(request)
     form = request.json()
-    log('ajax todo add', form, u)
+    # log('ajax todo add', form, u)
     t = TodoAjax.add(form, u.id)
     # 浏览器发送数据过来被处理后, 重定向到首页
     # 浏览器在请求新首页的时候, 就能看到新增的数据了

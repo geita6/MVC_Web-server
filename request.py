@@ -16,12 +16,12 @@ class Request(object):
         self.path = ""
         self.query = {}
         self.parse_path(path)
-        log('Request: path 和 query', self.path, self.query)
+        # log('Request: path 和 query', self.path, self.query)
 
         self.headers = {}
         self.cookies = {}
         self.add_headers(h[1:])
-        log('Request: headers 和 cookies', self.headers, self.cookies)
+        # log('Request: headers 和 cookies', self.headers, self.cookies)
 
     def add_headers(self, header):
         """
@@ -39,22 +39,22 @@ class Request(object):
 
     def form(self):
         body = urllib.parse.unquote_plus(self.body)
-        log('form', self.body)
-        log('form', body)
+        # log('form', self.body)
+        # log('form', body)
         args = body.split('&')
         f = {}
-        log('args', args)
+        # log('args', args)
         for arg in args:
             k, v = arg.split('=')
             f[k] = v
-        log('form() 字典', f)
+        # log('form() 字典', f)
         return f
 
     def json(self):
         body = urllib.parse.unquote_plus(self.body)
-        log('before json load', body)
+        # log('before json load', body)
         data = json.loads(body)
-        log('after json load', data)
+        # log('after json load', data)
         return data
 
     def parse_path(self, path):

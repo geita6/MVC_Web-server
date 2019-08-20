@@ -15,13 +15,13 @@ def index(request):
     if 'user_id' in request.query:
         user_id = request.query['user_id']
         u = User.find_by(id=int(user_id))
-        log('跳', u)
+        # log('跳', u)
         weibos = Weibo.find_all(user_id=u.id)
 
     # 链接中没有user_id，查看自己的微博；
     else:
         u = current_user(request)
-        log('不跳', u)
+        # log('不跳', u)
         weibos = Weibo.find_all(user_id=u.id)
 
     return html_response('weibo_index.html', weibos=weibos, user=u)
@@ -33,7 +33,7 @@ def add(request):
     """
     u = current_user(request)
     form = request.form()
-    log("weibo add form", form)
+    # log("weibo add form", form)
     Weibo.add(form, u.id)
     # 浏览器发送数据过来被处理后, 重定向到首页
     # 浏览器在请求新首页的时候, 就能看到新增的数据了
@@ -68,12 +68,12 @@ def update(request):
 def comment_add(request):
     u = current_user(request)
     form = request.form()
-    log('comment add form', form)
+    # log('comment add form', form)
     weibo_id = int(form['weibo_id'])
 
     Comment.add(form, u.id, weibo_id)
 
-    log('comment add', u, form)
+    # log('comment add', u, form)
     return redirect('/weibo/index')
 
 
@@ -100,7 +100,7 @@ def comment_update(request):
 
 def weibo_owner_required(route_function):
     def f(request):
-        log('weibo_owner_required')
+        # log('weibo_owner_required')
         u = current_user(request)
         if 'id' in request.query:
             weibo_id = request.query['id']
@@ -109,8 +109,10 @@ def weibo_owner_required(route_function):
         w = Weibo.find_by(id=int(weibo_id))
 
         if w.user_id == u.id:
+            log('能删除或修改微博')
             return route_function(request)
         else:
+            log('不能删除或修改微博')
             return redirect('/weibo/index')
 
     return f
@@ -119,7 +121,7 @@ def weibo_owner_required(route_function):
 # 新建 修改评论的权限认证 函数
 def comment_owner_required(route_function):
     def f(request):
-        log('comment_owner_required  in')
+        # log('comment_owner_required  in')
         u = current_user(request)
         if 'id' in request.query:
             comment_id = request.query['id']
@@ -140,7 +142,7 @@ def comment_owner_required(route_function):
 # 新建 删除评论的权限认证 函数
 def comment_owner_or_weibo_owner_required(route_function):
     def f(request):
-        log('comment_owner_or_weibo_owner_required  in')
+        # log('comment_owner_or_weibo_owner_required  in')
         u = current_user(request)
         if 'id' in request.query:
             comment_id = request.query['id']

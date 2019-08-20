@@ -19,7 +19,6 @@ def index(request):
     # return html_response('todo_index.html')
 
 
-
 def add(request):
     """
     用于增加新 todo 的路由函数

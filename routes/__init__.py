@@ -139,13 +139,13 @@ def login_required(route_function):
     """
 
     def f(request):
-        log('login_required')
+        # log('login_required')
         u = current_user(request)
         if u.is_guest():
             log('游客用户')
             return redirect('/user/login/view')
         else:
-            log('登录用户', route_function)
+            log('已登录用户', route_function)
             return route_function(request)
 
     return f
