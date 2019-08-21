@@ -17,7 +17,7 @@ Model部分通过ORM实现，基类对不同类型数据进行实例化，抽象
 - 已登录用户可以发表weibo和评论
 - 用户可以修改删除自己的weibo和评论
 - weibo主可以删除自己微博下的评论
-![简易weibo]
+![简易weibo](https://github.com/geita6/MVC_Web-server/blob/master/static/weibo.gif)
 
 ## 运行环境
 - Python 3.6.5

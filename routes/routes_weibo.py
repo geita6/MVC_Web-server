@@ -1,3 +1,5 @@
+from urllib.parse import unquote_plus
+
 from models.comment import Comment
 from models.user import User
 from models.weibo import Weibo
@@ -24,7 +26,10 @@ def index(request):
         # log('不跳', u)
         weibos = Weibo.find_all(user_id=u.id)
 
-    return html_response('weibo_index.html', weibos=weibos, user=u)
+    result = request.query.get('result', '')
+    result = unquote_plus(result)
+
+    return html_response('weibo_index.html', weibos=weibos, user=u, result=result)
 
 
 def add(request):
@@ -35,9 +40,10 @@ def add(request):
     form = request.form()
     # log("weibo add form", form)
     Weibo.add(form, u.id)
+    result = form
     # 浏览器发送数据过来被处理后, 重定向到首页
     # 浏览器在请求新首页的时候, 就能看到新增的数据了
-    return redirect('/weibo/index')
+    return redirect('/weibo/index?result={}'.format(result))
 
 
 # 修改删除weibo函数
@@ -60,9 +66,10 @@ def edit(request):
 def update(request):
     form = request.form()
     Weibo.update(form)
+    result = form
     # 浏览器发送数据过来被处理后, 重定向到首页
     # 浏览器在请求新首页的时候, 就能看到新增的数据了
-    return redirect('/weibo/index')
+    return redirect('/weibo/index?result={}'.format(result))
 
 
 def comment_add(request):
@@ -72,9 +79,9 @@ def comment_add(request):
     weibo_id = int(form['weibo_id'])
 
     Comment.add(form, u.id, weibo_id)
-
+    result = form
     # log('comment add', u, form)
-    return redirect('/weibo/index')
+    return redirect('/weibo/index?result={}'.format(result))
 
 
 # 新建删除评论函数
@@ -95,7 +102,8 @@ def comment_edit(request):
 def comment_update(request):
     form = request.form()
     Comment.update(form)
-    return redirect('/weibo/index')
+    result = form
+    return redirect('/weibo/index?result={}'.format(result))
 
 
 def weibo_owner_required(route_function):
